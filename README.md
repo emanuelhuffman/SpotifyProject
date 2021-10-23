@@ -10,4 +10,4 @@ go here: https://developer.spotify.com/dashboard/  --> login  --> create project
 run "npm install" in both server and client folder to install dependencies
   
 run "nodemon server.js" in server folder
-run "npm start" in client fodler
+run "npm start" in client folder
