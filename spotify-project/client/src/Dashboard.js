@@ -5,6 +5,7 @@ import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import axios from "axios"
+import SimilarSongs from "./SimilarSongs"
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "8b945ef10ea24755b83ac50cede405a0",
@@ -16,6 +17,7 @@ export default function Dashboard({ code }) {
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
+  const [recommendations, setRecommendations] = useState([])
 
   function chooseTrack(track) {
     setPlayingTrack(track)
@@ -42,6 +44,13 @@ export default function Dashboard({ code }) {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
   }, [accessToken])
+
+  useEffect(() => {
+    if (!accessToken) return
+    spotifyApi.getRecommendations({min_energy: 0.4, seed_artists: ['6mfK6Q2tzLMEchAr0e9Uzu', '4DYFVNKZ1uixa6SQTvzQwJ'], min_popularity: 50 }).then(res => {
+      console.log(res) //now we can set recommendations.
+    })
+  }, [recommendations, accessToken])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
@@ -74,14 +83,14 @@ export default function Dashboard({ code }) {
   }, [search, accessToken])
 
   return (
-    <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
+    <Container className="d-flex flex-column py-3" style={{ height: "100vh" }}>
       <Form.Control
         type="search"
         placeholder="Search Songs/Artists"
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+      <div className="flex-grow-1 my-2" style={{ overflowY: "auto"}}>
         {searchResults.map(track => (
           <TrackSearchResult
             track={track}
@@ -89,14 +98,16 @@ export default function Dashboard({ code }) {
             chooseTrack={chooseTrack}
           />
         ))}
+        
         {searchResults.length === 0 && (
-          <div className="text-center" style={{ whiteSpace: "pre" }}>
-            {lyrics}
-          </div>
+          <span className="text-center border-5 border-primary" style={{ whiteSpace: "pre" }}>
+            <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+          </span>
+          
         )}
-      </div>
-      <div>
-        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+
+        <SimilarSongs title={playingTrack?.title} artist={playingTrack?.artist} />
+
       </div>
     </Container>
   )
