@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import SpotifyPlayer from "react-spotify-web-playback"
+import SpotifyPlayer from "react-spotify-player"
 
 export default function Player({ accessToken, trackUri }) {
   const [play, setPlay] = useState(false)
@@ -15,7 +15,6 @@ export default function Player({ accessToken, trackUri }) {
   return (
     <span >
       <SpotifyPlayer
-      token={accessToken}
       uri={trackUri ? [trackUri] : []}
       size={size}
     />
