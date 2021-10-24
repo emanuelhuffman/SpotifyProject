@@ -1,11 +1,6 @@
 import React from "react"
 
-export default function SimilarSongs({ similarSongList, title, artist }) {
-
-    const songs = similarSongList.map((song) => 
-        <li>{song.artist}</li>
-    );
-
+export default function SimilarSongs({ similarSongList }) {
   return (
     <div
       className="d-flex m-2 align-items-center"
@@ -13,7 +8,13 @@ export default function SimilarSongs({ similarSongList, title, artist }) {
     >
       
       <div className="ml-3">
-        <ul>{songs}</ul>
+        {similarSongList.map((data, key) => {
+            return (
+                <div key={key}>
+                    {data.name}
+                </div>
+            )
+        })}
        </div>
     </div>
   )

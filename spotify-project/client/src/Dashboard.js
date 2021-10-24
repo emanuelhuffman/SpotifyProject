@@ -18,6 +18,7 @@ export default function Dashboard({ code }) {
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
   const [recommendations, setRecommendations] = useState([])
+  const [currentTrack, setcurrentTrack] = useState([])
 
   function chooseTrack(track) {
     setPlayingTrack(track)
@@ -48,11 +49,13 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!accessToken) return
     if (!playingTrack) return
+    if (playingTrack  == currentTrack) return
     var songId = playingTrack.uri.substring(14)
-    spotifyApi.getRecommendations({limit:50, seed_tracks: songId}).then(res => {
+    spotifyApi.getRecommendations({limit:10, seed_tracks: songId}).then(res => {
       setRecommendations(res.body.tracks)
+      setcurrentTrack(playingTrack)
     })
-  }, [recommendations, accessToken, playingTrack])
+  }, [recommendations, accessToken, playingTrack, currentTrack])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
@@ -108,7 +111,7 @@ export default function Dashboard({ code }) {
           
         )}
 
-        <SimilarSongs similarSongList={recommendations} title={playingTrack?.title} artist={playingTrack?.artist} />
+        <SimilarSongs similarSongList={recommendations} />
 
       </div>
     </Container>
