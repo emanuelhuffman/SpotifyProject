@@ -8,7 +8,7 @@ import axios from "axios"
 import SimilarSongs from "./SimilarSongs"
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: "8b945ef10ea24755b83ac50cede405a0",
+  clientId: process.env.REACT_APP_CLIENT_ID,
 })
 
 export default function Dashboard({ code }) {
@@ -54,6 +54,7 @@ export default function Dashboard({ code }) {
     spotifyApi.getRecommendations({limit:10, seed_tracks: songId}).then(res => {
       setRecommendations(res.body.tracks)
       setcurrentTrack(playingTrack)
+      console.log(res.body.tracks)
     })
   }, [recommendations, accessToken, playingTrack, currentTrack])
 

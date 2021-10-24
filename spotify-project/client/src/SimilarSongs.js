@@ -11,7 +11,7 @@ export default function SimilarSongs({ similarSongList }) {
         {similarSongList.map((data, key) => {
             return (
                 <div key={key}>
-                    {data.name}
+                    {data.name} - {data.artists[0].name}
                 </div>
             )
         })}

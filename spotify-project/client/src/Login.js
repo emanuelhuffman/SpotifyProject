@@ -1,7 +1,44 @@
 import React from 'react'
 import { Container  } from 'react-bootstrap'
 
-const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=664b0190615d41288e39bf07500618ba&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
+require('dotenv').config()
+
+/**
+
+ */
+const scopes = [
+    'streaming',
+    'user-read-email',
+    'user-read-private',
+    'user-library-read',
+    'user-library-modify',
+    'user-read-playback-state',
+    'user-modify-playback-state'
+]
+
+/**
+
+ */
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+
+const SCOPE = () => {
+    var string = '';
+    scopes.forEach(element => string += element +'%20');
+    return string;
+}
+
+
+/**
+
+ */
+
+const AUTH_URL = 'https://accounts.spotify.com/authorize' +
+'?client_id=' + CLIENT_ID + 
+'&response_type=code' +
+'&redirect_uri=' + REDIRECT_URI +
+'&scope=' + SCOPE();
+
 
 export default function Login() {
     return (
