@@ -16,48 +16,41 @@ export default function Dashboard({ code }) {
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
-  const [lyrics, setLyrics] = useState("")
   const [recommendations, setRecommendations] = useState([])
   const [currentTrack, setcurrentTrack] = useState([])
+  const [cont, setCont] = useState(0);
 
   function chooseTrack(track) {
     setPlayingTrack(track)
     setSearch("")
-    setLyrics("")
   }
-
-  useEffect(() => {
-    if (!playingTrack) return
-
-    axios
-      .get("http://localhost:3001/lyrics", {
-        params: {
-          track: playingTrack.title,
-          artist: playingTrack.artist,
-        },
-      })
-      .then(res => {
-        setLyrics(res.data.lyrics)
-      })
-  }, [playingTrack])
 
   useEffect(() => {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
   }, [accessToken])
 
+  /*
+    Gets recommended tracks from the currently playing track
+  */
   useEffect(() => {
     if (!accessToken) return
     if (!playingTrack) return
-    if (playingTrack  == currentTrack) return
+    if (playingTrack  === currentTrack) return
+
+    setcurrentTrack(playingTrack)
+
     var songId = playingTrack.uri.substring(14)
+    console.log(playingTrack)
     spotifyApi.getRecommendations({limit:10, seed_tracks: songId}).then(res => {
       setRecommendations(res.body.tracks)
-      setcurrentTrack(playingTrack)
-      console.log(res.body.tracks)
     })
+
   }, [recommendations, accessToken, playingTrack, currentTrack])
 
+  /*
+    
+  */
   useEffect(() => {
     if (!search) return setSearchResults([])
     if (!accessToken) return
@@ -90,6 +83,9 @@ export default function Dashboard({ code }) {
 
   return (
     <Container className="d-flex flex-column py-3" style={{ height: "100vh" }}>
+
+
+    
       <Form.Control
         type="search"
         placeholder="Search Songs/Artists"
@@ -116,5 +112,7 @@ export default function Dashboard({ code }) {
 
       </div>
     </Container>
+    
+    
   )
 }
