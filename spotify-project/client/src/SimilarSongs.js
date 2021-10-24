@@ -1,6 +1,10 @@
 import React from "react"
 
-export default function SimilarSongs({ title, artist }) {
+export default function SimilarSongs({ similarSongList, title, artist }) {
+
+    const songs = similarSongList.map((song) => 
+        <li>{song.artist}</li>
+    );
 
   return (
     <div
@@ -9,6 +13,7 @@ export default function SimilarSongs({ title, artist }) {
     >
       
       <div className="ml-3">
+        <ul>{songs}</ul>
        </div>
     </div>
   )

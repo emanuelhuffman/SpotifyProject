@@ -47,10 +47,12 @@ export default function Dashboard({ code }) {
 
   useEffect(() => {
     if (!accessToken) return
-    spotifyApi.getRecommendations({min_energy: 0.4, seed_artists: ['6mfK6Q2tzLMEchAr0e9Uzu', '4DYFVNKZ1uixa6SQTvzQwJ'], min_popularity: 50 }).then(res => {
-      console.log(res) //now we can set recommendations.
+    if (!playingTrack) return
+    var songId = playingTrack.uri.substring(14)
+    spotifyApi.getRecommendations({limit:50, seed_tracks: songId}).then(res => {
+      setRecommendations(res.body.tracks)
     })
-  }, [recommendations, accessToken])
+  }, [recommendations, accessToken, playingTrack])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
@@ -106,7 +108,7 @@ export default function Dashboard({ code }) {
           
         )}
 
-        <SimilarSongs title={playingTrack?.title} artist={playingTrack?.artist} />
+        <SimilarSongs similarSongList={recommendations} title={playingTrack?.title} artist={playingTrack?.artist} />
 
       </div>
     </Container>
